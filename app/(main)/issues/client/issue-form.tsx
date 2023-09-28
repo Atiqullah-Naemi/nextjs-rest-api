@@ -53,7 +53,7 @@ const IssueForm: React.FC<IssueFormProps> = ({ initialData }) => {
   };
 
   const buttonLoadingText = initialData ? "Upadating..." : "'Creating...";
-  const buttonText = initialData ? "Upadate" : "'Create";
+  const buttonText = initialData ? "Upadate" : "Create";
 
   return (
     <form

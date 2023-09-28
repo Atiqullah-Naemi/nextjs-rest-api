@@ -27,3 +27,24 @@ export async function PATCH(
     console.error({ error });
   }
 }
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: { issueId: string } }
+) {
+  if (!params.issueId)
+    return new NextResponse("issue id is required", { status: 400 });
+
+  try {
+    const issue = await prismadb.issue.delete({
+      where: {
+        id: params.issueId,
+      },
+    });
+
+    return NextResponse.json(issue);
+  } catch (error) {
+    console.error({ error });
+    return new NextResponse("Internal error", { status: 500 });
+  }
+}

@@ -2,11 +2,7 @@ import CardContainer from "@/components/card-container";
 import IssueForm from "../client/issue-form";
 import prismadb from "@/lib/prismadb";
 
-export default async function Issues({
-  params,
-}: {
-  params: { issueId: string };
-}) {
+const IssuePage = async ({ params }: { params: { issueId: string } }) => {
   const issue = await prismadb.issue.findUnique({
     where: {
       id: params.issueId,
@@ -18,4 +14,6 @@ export default async function Issues({
       <IssueForm initialData={issue} />
     </CardContainer>
   );
-}
+};
+
+export default IssuePage;

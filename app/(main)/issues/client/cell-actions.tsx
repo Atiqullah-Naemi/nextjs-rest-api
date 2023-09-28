@@ -30,6 +30,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       setLoading(true);
       await axios.delete(`/api/issues/${data.id}`);
       toast({ title: "issue is deleted" });
+      router.refresh();
     } catch (error) {
       toast({ title: "issue is deleted", variant: "destructive" });
     } finally {
