@@ -6,13 +6,25 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
+import { Issue } from "@prisma/client";
 
-function IssueForm() {
+interface IssueFormProps {
+  initialData: Issue | null;
+}
+
+const IssueForm: React.FC<IssueFormProps> = ({ initialData }) => {
+  const defaultValues = initialData
+    ? initialData
+    : {
+        title: "",
+        description: "",
+      };
+
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm({ mode: "onChange" });
+  } = useForm({ defaultValues, mode: "onChange" });
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
@@ -21,14 +33,27 @@ function IssueForm() {
     try {
       setLoading(true);
 
-      await axios.post("/api/issues", data);
-      router.push("/");
+      if (initialData) {
+        await axios.patch(`/api/issues/${initialData.id}`, {
+          ...data,
+        });
+
+        router.refresh();
+        router.push("/");
+      } else {
+        await axios.post("/api/issues", data);
+        router.refresh();
+        router.push("/");
+      }
     } catch (error) {
       console.log({ error });
     } finally {
       setLoading(false);
     }
   };
+
+  const buttonLoadingText = initialData ? "Upadating..." : "'Creating...";
+  const buttonText = initialData ? "Upadate" : "'Create";
 
   return (
     <form
@@ -47,10 +72,10 @@ function IssueForm() {
       </div>
 
       <Button type="submit" disabled={loading}>
-        {loading ? "creating..." : " Create"}
+        {loading ? buttonLoadingText : buttonText}
       </Button>
     </form>
   );
-}
+};
 
 export default IssueForm;
