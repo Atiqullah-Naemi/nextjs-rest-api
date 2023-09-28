@@ -1,9 +1,26 @@
-import Image from "next/image";
+import prismadb from "@/lib/prismadb";
+import { format } from "date-fns";
+import { IssueClient } from "./(main)/issues/client/issue-client";
 
-export default function Home() {
+export default async function Home() {
+  const issues = await prismadb.issue.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  const formattedIssues = issues.map((item) => {
+    return {
+      id: item.id,
+      title: item.title,
+      description: item.description,
+      createdAt: format(item.createdAt, "MMMM do, yyyy").toString(),
+    };
+  });
+
   return (
-    <div>
-      <h1 className="text-rose-500">heading</h1>
-    </div>
+    <>
+      <IssueClient data={formattedIssues} />
+    </>
   );
 }
