@@ -7,6 +7,7 @@ import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { Issue } from "@prisma/client";
+import useModal from "@/zustand/useModal";
 
 interface IssueFormProps {
   initialData: Issue | null;
@@ -26,6 +27,7 @@ const IssueForm: React.FC<IssueFormProps> = ({ initialData }) => {
     handleSubmit,
   } = useForm({ defaultValues, mode: "onChange" });
   const router = useRouter();
+  const { setOpen } = useModal();
 
   const [loading, setLoading] = useState(false);
 
@@ -49,10 +51,11 @@ const IssueForm: React.FC<IssueFormProps> = ({ initialData }) => {
       console.log({ error });
     } finally {
       setLoading(false);
+      setOpen(false);
     }
   };
 
-  const buttonLoadingText = initialData ? "Upadating..." : "'Creating...";
+  const buttonLoadingText = initialData ? "Upadating..." : "Creating...";
   const buttonText = initialData ? "Upadate" : "Create";
 
   return (

@@ -8,12 +8,15 @@ import { Plus } from "lucide-react";
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import IssueForm from "./issue-form";
+import useModal from "@/zustand/useModal";
 
 interface IssueProps {
   data: IssueColumns[];
 }
 
 export const IssueClient: React.FC<IssueProps> = ({ data }) => {
+  const { open, setOpen } = useModal();
+
   return (
     <>
       <div className="w-full flex flex-row h-[50px] justify-between">
@@ -21,8 +24,8 @@ export const IssueClient: React.FC<IssueProps> = ({ data }) => {
           <div className="flex flex-row w-full justify-between">
             <Label className="text-lg">Issues</Label>
 
-            <Dialog>
-              <DialogTrigger>
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
                 <Button>
                   <Plus size={20} className="mr-2" /> Create new Issue
                 </Button>
